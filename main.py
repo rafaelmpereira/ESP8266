@@ -69,15 +69,15 @@ __ledOff = 'off'
 
 def main():
     # start Power LED
-    sensor = HTU21D()
+    # sensor = HTU21D()
     temp = sensor.get_temp()
     hum = sensor.get_hum()
     print('Temp: %s°C / Hum: %s%%' % (temp, hum))
-    adcValue = IOConfig.__adcPin.read()
-    print('adcValue: %s' % adcValue)
+    #adcValue = IOConfig.__adcPin.read()
+    #print('adcValue: %s' % adcValue)
     networkConfig.mqtt_subscribe("1", "temp", "c", sensor.get_temp())
     networkConfig.mqtt_subscribe("2", "rel_hum", "p", sensor.get_hum())
-    networkConfig.mqtt_subscribe("3", "analog_sensor", "null", adcValue)
+    #networkConfig.mqtt_subscribe("3", "analog_sensor", "null", adcValue)
     # ws = WebSocket()
     # ws.set_html()
     IOConfig.setPowerLED(__ledOn)
@@ -101,7 +101,8 @@ if __name__ == '__main__':
     fs_size = fs_stat[0] * fs_stat[2]
     fs_free = fs_stat[0] * fs_stat[3]
     print("File System Size {:,} - Free Space {:,}".format(fs_size, fs_free))
-    i2c_scanner.scan()
+    #i2c_scanner.scan()
     # networkConfig.set_access_point()
-    # main loop start here
+    
+           # main loop start here
     main()
