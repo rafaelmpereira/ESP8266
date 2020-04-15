@@ -33,8 +33,9 @@ def connect_wifi():
             pass
     print('network config:', sta_if.ifconfig())
 
-
 # infos: http://mydevices.com/cayenne/docs/cayenne-mqtt-api/#cayenne-mqtt-api-manually-publishing-subscribing
+
+
 # check infos for cayenne mqtt formats
 def mqtt_subscribe(topic, type, unit, value):
     # convert topic and msg into cayenne format
