@@ -10,17 +10,17 @@ import time                      #biblioteca
 import upip                      #biblioteca
 import machine                   #biblioteca
 import os                        #biblioteca
-import i2c_scanner               #arquivo
 import networkConfig             #arquivo
-import IOConfig                  #arquivo
+#import i2c_scanner              #arquivo
+#import IOConfig                 #arquivo
 
-# Wifi is needed for installing the packages
+
 networkConfig.connect_wifi()
-
+"""
 # TODO: test later with list
 pkgList = ["micropython-io-0.1.tar.gz", "micropython-xmltok2-0.2.tar.gz",
            "micropython-xml.etree.ElementTree-0.1.1.tar.gz", "micropython-umqtt.simple-1.3.4.tar.gz"]
-
+"""
 try:
     f = open('lib/io.py', "r")
     io_exists = True
@@ -77,6 +77,8 @@ def main():
     print('Temp: %s°C / Hum: %s%%' % (temp, hum))
     #adcValue = IOConfig.__adcPin.read()
     #print('adcValue: %s' % adcValue)
+               
+    # Sending data to Cayenne channel ([channel],[type],[unit],[value])
     networkConfig.mqtt_subscribe("1", "temp", "c", sensor.get_temp())
     networkConfig.mqtt_subscribe("2", "rel_hum", "p", sensor.get_hum())
     #networkConfig.mqtt_subscribe("3", "analog_sensor", "null", adcValue)
@@ -93,10 +95,11 @@ def main():
 
 if __name__ == '__main__':
     # configure rtc für DEEPSLEEP wake up
-    rtc = machine.RTC()
-    rtc.irq(trigger=rtc.ALARM0, wake=machine.DEEPSLEEP)
+    #rtc = machine.RTC()
+    #rtc.irq(trigger=rtc.ALARM0, wake=machine.DEEPSLEEP)
     # DEEPSLEEP 60 minutes
-    rtc.alarm(rtc.ALARM0, 3600000)
+    #rtc.alarm(rtc.ALARM0, 3600000)
+    
     # get free space
     # https://forum.micropython.org/viewtopic.php?f=16&t=2361&hilit=statvfs
     fs_stat = os.statvfs('/')
@@ -104,8 +107,9 @@ if __name__ == '__main__':
     fs_free = fs_stat[0] * fs_stat[3]
     print("File System Size {:,} - Free Space {:,}".format(fs_size, fs_free))
     #i2c_scanner.scan()
+    
     # networkConfig.set_access_point()
     
-           # main loop start here
+    # main loop start here
     main()
 
