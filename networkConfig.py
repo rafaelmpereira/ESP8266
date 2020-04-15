@@ -12,7 +12,7 @@ __ledOn = 'on'
 __ledOff = 'off'
 __myDeviceAdd = "34.206.242.200"
 
-# creating board's wifi
+# creating board's wifi - not sure the need
 def set_access_point():
     ap_if = network.WLAN(network.AP_IF)
     ap_if.active(True)
@@ -33,13 +33,15 @@ def connect_wifi():
             pass
     print('network config:', sta_if.ifconfig())
 
-# infos: http://mydevices.com/cayenne/docs/cayenne-mqtt-api/#cayenne-mqtt-api-manually-publishing-subscribing
-
-
 # check infos for cayenne mqtt formats
+# http://mydevices.com/cayenne/docs/cayenne-mqtt-api/#cayenne-mqtt-api-manually-publishing-subscribing
+
+# Sending data
 def mqtt_subscribe(topic, type, unit, value):
     # convert topic and msg into cayenne format
+    # channel info
     cayenneTopic = "v1/%s/things/%s/data/%s" % (settings._mqttUsername, settings._mqttClientId, topic)
+    # data info
     cayenneMsg = "%s,%s=%s" % (type, unit, str(value)[:5])
 
     mqttClient = MQTTClient(client_id=settings._mqttClientId, server=__myDeviceAdd,
