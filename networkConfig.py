@@ -1,25 +1,24 @@
-#############################################################
 #networkConfig.py
-
+# from Binary Bunde
 # Tutorial from https://github.com/lvidarte/esp8266/wiki/MicroPython:-Network-Basics
 
 import network
 import settings
 import time
-import IOConfig                             #arquivo
+import IOConfig                        #arquivo
 from umqtt.simple import MQTTClient
 
 __ledOn = 'on'
 __ledOff = 'off'
 __myDeviceAdd = "34.206.242.200"
 
-
+# creating board's wifi
 def set_access_point():
     ap_if = network.WLAN(network.AP_IF)
     ap_if.active(True)
     ap_if.config(essid=settings._ssidAS, password=settings._asPassword)
 
-
+# creating connection to home wifi
 def connect_wifi():
     sta_if = network.WLAN(network.STA_IF)
     if not sta_if.isconnected():
