@@ -4,13 +4,14 @@
 # ESP8266 Micropython Tutorial https://docs.micropython.org/en/latest/esp8266/tutorial/intro.html
 # MicroPython Libs https://github.com/pfalcon/micropython-lib
 # MicroPython Pycharm Plugin Tutorial https://github.com/vlasovskikh/intellij-micropython
-import time
-import upip
-import machine
-import i2c_scanner
-import networkConfig
-import IOConfig
-import os
+
+import time                      #biblioteca
+import upip                      #biblioteca
+import machine                   #biblioteca
+import os                        #biblioteca
+import i2c_scanner               #arquivo
+import networkConfig             #arquivo
+import IOConfig                  #arquivo
 
 # Wifi is needed for installing the packages
 networkConfig.connect_wifi()
@@ -59,8 +60,8 @@ except OSError:
 if not xml_exists:
     upip.install("micropython-umqtt.simple")
 
-from webSocket import WebSocket
-from htu21d import HTU21D
+from webSocket import WebSocket             #biblioteca
+from htu21d import HTU21D                   #arquivo
 
 
 __ledOn = 'on'
