@@ -1,4 +1,5 @@
 # from BinaryBande's github
+# https://community.mydevices.com/t/use-esp8266-with-micropython-and-show-sensor-values-with-cayenne/11919
 
 # NodeMCU Pinout https://pradeepsinghblog.files.wordpress.com/2016/04/nodemcu_pins.png?w=616
 # ESP8266 Micropython Tutorial https://docs.micropython.org/en/latest/esp8266/tutorial/intro.html
@@ -107,3 +108,4 @@ if __name__ == '__main__':
     
            # main loop start here
     main()
+
