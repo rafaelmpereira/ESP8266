@@ -38,6 +38,7 @@ def senddata():
   data = ("%s,%s=%s/%s" %(type, unit, value, channel))
     
   """
+  # DA BIBLIOTECA CAYENNE
   # forma de envio
   def getDataTopic(self, channel):
         """Get the data topic string.
@@ -52,6 +53,11 @@ def senddata():
             else:                       # SEM DATATYPE CONHECIDO
                 payload = value
             self.mqttPublish(topic, payload)
+  
+  	# DO SITE CAYENNE
+  	Send Sensor Data to Channel 2
+	PUB v1/A1234B5678C/things/0123-4567-89AB-CDEF/data/2
+	temp,c=20.7
   """  
   
   c.publish(topic, data)
