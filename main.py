@@ -14,8 +14,6 @@ clientid = "" 			#insert your client ID
 username = "" 			#insert your MQTT username
 password = "" 			#insert your MQTT password
 
-topic = ("v1/%s/things/%s/" % (username, clientid))
-
 def connectWifi(ssid,passwd):
   global wlan
   wlan=network.WLAN(network.STA_IF)
@@ -26,7 +24,7 @@ def connectWifi(ssid,passwd):
     time.sleep(1)
     
 connectWifi(SSID,PASSWORD)
-#server = SERVER
+
 c = MQTTClient(clientid, server,0,username,password)
 c.connect()
 
@@ -35,17 +33,17 @@ def senddata():
   unit = "c"
   value = 25.4
   channel = "1"
-  data = ("%s,%s=%s/%s" %(type, unit, value, channel))
-    
+  topic = ("v1/%s/things/%s/" % (username, clientid))		# possibilidade de /username/clientid/canal [topic]
+  data = ("%s,%s=%s/%s" %(type, unit, value, channel))		# possibilidade de /type/unit/value [payload]
+  
   """
   # DA BIBLIOTECA CAYENNE
   # forma de envio
   def getDataTopic(self, channel):
-        """Get the data topic string.
-        channel is the channel to send data to.
-        """
+        # Get the data topic string.
+        # channel is the channel to send data to.
         return "%s/%s/%s" % (self.rootTopic, DATA_TOPIC, channel)
-  
+
   # forma de envio
   topic = self.getDataTopic(channel)
             if dataType:                # COM DATATYPE CONHECIDO
@@ -61,7 +59,6 @@ def senddata():
   """  
   
   c.publish(topic, data)
-
   time.sleep(10)
   print("temperature is: ", value)
   print("data sent")
