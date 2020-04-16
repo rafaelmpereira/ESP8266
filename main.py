@@ -1,3 +1,65 @@
+# https://www.hackster.io/hendra/connect-mydevice-cayenne-using-micropython-with-ds18b20-c89f5d
+# Hendra Kusumah
+
+from umqtt.simple import MQTTClient
+from machine import Pin
+import network
+import time
+import ds18x20
+import onewire
+
+# the device is on GPIO12
+dat =Pin(12)
+# create the onewire object
+ds = ds18x20.DS18X20(onewire.OneWire(dat))
+# scan for devices on the bus
+roms = ds.scan()
+print('found devices:', roms)
+
+#wifi setting
+SSID="NET_2GEF16EA" #insert your wifi ssid
+PASSWORD="" #insert your wifi password
+
+SERVER = "mqtt.mydevices.com"
+CLIENT_ID = " " #insert your client ID
+username=' ' #insert your MQTT username
+password=' ' #insert your MQTT password
+TOPIC = ("v1/%s/things/%s/data/1" % (username, CLIENT_ID))
+
+def connectWifi(ssid,passwd):
+  global wlan
+  wlan=network.WLAN(network.STA_IF)
+  wlan.active(True)
+  wlan.disconnect()
+  wlan.connect(ssid,passwd)
+  while(wlan.ifconfig()[0]=='0.0.0.0'):
+    time.sleep(1)
+    
+connectWifi(SSID,PASSWORD)
+server=SERVER
+c = MQTTClient(CLIENT_ID, server,0,username,password)
+c.connect()
+
+def senddata():
+  ds.convert_temp()
+  time.sleep_ms(100)
+  temp = ds.read_temp(roms[0])
+  c.publish(TOPIC, str(temp))
+
+  time.sleep(10)
+  print("temperature is: ", temp)
+  print("data sent")
+  
+while True:
+	try:
+		senddata()
+	except OSError:
+		pass
+
+
+
+#...................
+
 # from BinaryBande's github
 # https://community.mydevices.com/t/use-esp8266-with-micropython-and-show-sensor-values-with-cayenne/11919
 
