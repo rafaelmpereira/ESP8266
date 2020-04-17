@@ -1,72 +1,40 @@
-# https://www.hackster.io/hendra/connect-mydevice-cayenne-using-micropython-with-ds18b20-c89f5d
-# Hendra Kusumah
-
 from umqtt.simple import MQTTClient
-from machine import Pin
-import network
 import time
 
-#wifi setting
-ssid="NET_2GEF16EA"             #insert your wifi ssid
-password=""                     #insert your wifi password
+from wifi import conectar
+#DEFINICOES
 server = "mqtt.mydevices.com"
-clientid = "" 			#insert your client ID
-username = "" 			#insert your MQTT username
-password = "" 			#insert your MQTT password
-
-def connectWifi(ssid,passwd):
-  global wlan
-  wlan=network.WLAN(network.STA_IF)
-  wlan.active(True)
-  wlan.disconnect()
-  wlan.connect(ssid,passwd)
-  while(wlan.ifconfig()[0]=='0.0.0.0'):
-    time.sleep(1)
-    
-connectWifi(SSID,PASSWORD)
-
-c = MQTTClient(clientid, server,0,username,password)
+clientid = "aa07e300-803f-11ea-883c-638d8ce4c23d" 			#insert your client ID
+username = "d6033960-7df0-11ea-a67f-15e30d90bbf4" 			#insert your MQTT username
+password = "99e45f8e4ef9ef46f3bc0c42e4d0317e5bb523cb" 			#insert your MQTT password
+type = "analog_sensor"
+#type = "temp"
+unit = ""
+#unit = "c"
+value = 0
+#value = 5.0
+channel = 0
+c = MQTTClient(clientid,server,0,username,password)
 c.connect()
 
-def senddata():
-  type = "temp"
-  unit = "c"
-  value = 25.4
-  channel = "1"
-  topic = ("v1/%s/things/%s/" % (username, clientid))		# possibilidade de /username/clientid/canal [topic]
-  data = ("%s,%s=%s/%s" %(type, unit, value, channel))		# possibilidade de /type/unit/value [payload]
+def pub():
+  topic = ("v1/%s/things/%s/data/%s" % (username,clientid, channel))
+  message = ("%s,%s=%s" %(type,unit,value))
+  c.publish(topic,message)
   
-  """
-  # DA BIBLIOTECA CAYENNE
-  # forma de envio
-  def getDataTopic(self, channel):
-        # Get the data topic string.
-        # channel is the channel to send data to.
-        return "%s/%s/%s" % (self.rootTopic, DATA_TOPIC, channel)
-
-  # forma de envio
-  topic = self.getDataTopic(channel)
-            if dataType:                # COM DATATYPE CONHECIDO
-                payload = "%s,%s=%s" % (dataType, dataUnit, value)
-            else:                       # SEM DATATYPE CONHECIDO
-                payload = value
-            self.mqttPublish(topic, payload)
+  print("Enviado: "+ str(value))
+  #c.disconnect()
   
-  	# DO SITE CAYENNE
-  	Send Sensor Data to Channel 2
-	PUB v1/A1234B5678C/things/0123-4567-89AB-CDEF/data/2
-	temp,c=20.7
-  """  
-  
-  c.publish(topic, data)
-  time.sleep(10)
-  print("temperature is: ", value)
-  print("data sent")
-  
-  # Send data format: v1/username/things/clientID/type,unit=value/channel
-  
+for i in range(2):
+  value += 5
+  pub()
+  time.sleep(1)
+"""
 while True:
 	try:
-		senddata()
+    pub()
+    time.sleep(1)
 	except OSError:
 		pass
+"""
+
