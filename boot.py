@@ -40,6 +40,7 @@ topicSub = ("v1/%s/things/%s/cmd/%s" % (username, clientid, channelSub))
 def sub():
   def sub_cb(topic, msg):
     print((topic, msg))
+    #if conditions to act with command
   
   c.set_callback(sub_cb)
   c.subscribe("%s" % (topicSub))
@@ -59,7 +60,8 @@ def main(server="localhost"):
 """
 while True:
   try:
-    pub()
+    #pub()
+    sub()
     time.sleep(1)
   except OSError:
     pass
