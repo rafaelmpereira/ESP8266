@@ -19,9 +19,10 @@ conectar()
 c = MQTTClient(clientid,server,0,username,password)
 c.connect()
 
+# sending data to channel
 def pub():
   value = readDHT11()
-  topic = ("v1/%s/things/%s/data/%s" % (username,clientid, channel))
+  topic = ("v1/%s/things/%s/data/%s" % (username, clientid, channel))
   message = ("%s,%s=%s" %(type,unit,value))
   c.publish(topic,message)
   print("Enviado.")
@@ -31,6 +32,27 @@ def pub():
   sleep(5)
   #c.disconnect()
 
+  
+# receiving data from channel
+def sub():
+  channel = 5 # rele channel
+  #v1/username/things/clientid/cmd/channel
+  topic = ("v1/%s/things/%s/cmd/%s" % (username, clientid, channel))
+  c.set_callback(sub)
+  c.subscribe(b"%s" % (topic))
+  
+  
+  """
+  def sub_cb(topic, msg):
+    print((topic, msg))
+
+def main(server="localhost"):
+    c = MQTTClient("umqtt_client", server)
+    c.set_callback(sub_cb)
+    c.connect()
+    c.subscribe(b"foo_topic")
+  """
+  
 while True:
   try:
     pub()
