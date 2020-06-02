@@ -37,14 +37,15 @@ topicSub = ("v1/%s/things/%s/cmd/%s" % (username, clientid, channelSub))
 #            v1/username/things/clientid/cmd/channel
 # receiving data from channel
 
-def sub_cb(topic, msg):
+def sub():
+  def sub_cb(topic, msg):
+    print((topic, msg))
+  
   c.set_callback(sub_cb)
   c.subscribe("%s" % (topicSub))
   #c.subscribe(b"%s" % (topicSub))
-  print((topic, msg))
-  
-  
-  
+    
+    
 """
 # Example:
 def sub_cb(topic, msg):
