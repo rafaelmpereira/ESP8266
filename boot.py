@@ -14,15 +14,19 @@ led.value(1) # on ESP12E (RAFAEL), the built in LED turns off with HIGH (and on 
 type = "temp"
 unit = "c"
 channel = 0
-conectar()
+channelSub = 5 # relay channel
 
+value = readDHT11()
+topic = ("v1/%s/things/%s/data/%s" % (username, clientid, channel))
+topicSub = ("v1/%s/things/%s/cmd/%s" % (username, clientid, channelSub))
+#            v1/username/things/clientid/cmd/channel
+
+conectar() #wifi
 c = MQTTClient(clientid,server,0,username,password)
 c.connect()
 
 # sending data to channel
 def pub():
-  value = readDHT11()
-  topic = ("v1/%s/things/%s/data/%s" % (username, clientid, channel))
   message = ("%s,%s=%s" %(type,unit,value))
   c.publish(topic,message)
   print("Enviado.")
@@ -31,12 +35,8 @@ def pub():
   led.value(not led.value())
   sleep(5)
   #c.disconnect()
-  
-channelSub = 5 # relay channel
-topicSub = ("v1/%s/things/%s/cmd/%s" % (username, clientid, channelSub))
-#            v1/username/things/clientid/cmd/channel
-# receiving data from channel
 
+# receiving data from channel
 def sub():
   def sub_cb(topic, msg):
     print((topic, msg))
@@ -50,13 +50,23 @@ def sub():
 """
 # Example:
 def sub_cb(topic, msg):
-  print((topic, msg))
+    print((topic, msg))
 
 def main(server="localhost"):
-  c = MQTTClient("umqtt_client", server)
-  c.set_callback(sub_cb)
-  c.connect()
-  c.subscribe(b"foo_topic")
+    c = MQTTClient("umqtt_client", server)
+    c.set_callback(sub_cb)
+    c.connect()
+    c.subscribe(b"foo_topic")
+    while True:
+        if True:
+            # Blocking wait for message
+            c.wait_msg()
+        else:
+            # Non-blocking wait for message
+            c.check_msg()
+            # Then need to sleep to avoid 100% CPU usage (in a real
+            # app other useful actions would be performed instead)
+            time.sleep(1)
 """
 while True:
   try:
