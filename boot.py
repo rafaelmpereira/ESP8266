@@ -1,4 +1,3 @@
-
 from machine import Pin
 from umqtt.simple import MQTTClient
 import time
@@ -10,69 +9,42 @@ server = "mqtt.mydevices.com"
 clientid = "aa07e300-803f-11ea-883c-638d8ce4c23d" 			#insert your client ID
 username = "d6033960-7df0-11ea-a67f-15e30d90bbf4" 			#insert your MQTT username
 password = "99e45f8e4ef9ef46f3bc0c42e4d0317e5bb523cb" 			#insert your MQTT password
-led.value(1) # on ESP12E (RAFAEL), the built in LED turns off with HIGH (and on with LOW)
+led.value(1) # on ESP12E (not ESP32), the built in LED turns off with HIGH (and on with LOW)
 type = "temp"
 unit = "c"
 channel = 0
-channelSub = 5 # relay channel
-
+channelSub = 5
 value = readDHT11()
-topic = ("v1/%s/things/%s/data/%s" % (username, clientid, channel))
+topicPub = ("v1/%s/things/%s/data/%s" % (username, clientid, channel))
 topicSub = ("v1/%s/things/%s/cmd/%s" % (username, clientid, channelSub))
-#            v1/username/things/clientid/cmd/channel
 
-conectar() #wifi
+#conectar() #wifi
+c.disconnect()  #if previously connected
 c = MQTTClient(clientid,server,0,username,password)
 c.connect()
 
 # sending data to channel
 def pub():
   message = ("%s,%s=%s" %(type,unit,value))
-  c.publish(topic,message)
-  print("Enviado.")
+  c.publish(topicPub,message)
+  print("Enviado.", value)
   led.value(not led.value())
   sleep(0.2)
   led.value(not led.value())
-  sleep(5)
-  #c.disconnect()
-
+  
 # receiving data from channel
 def sub():
   def sub_cb(topic, msg):
-    print((topic, msg))
-    #if conditions to act with command
-  
+    p = msg.decode().split(',')
+    print('Recebido: ',p[1])
+    c.publish("v1/%s/things/%s/digital/%s" % (username, clientid, channelSub),"%s" %(p[1])) #sending status
+    c.publish("v1/%s/things/%s/response" % (username, clientid),"ok,%s" %(p[0])) #sending actuator is ok
   c.set_callback(sub_cb)
-  c.subscribe("%s" % (topicSub))
-  #c.subscribe(b"%s" % (topicSub))
-    
-    
-"""
-# Example:
-def sub_cb(topic, msg):
-    print((topic, msg))
+  c.subscribe(topicSub)
 
-def main(server="localhost"):
-    c = MQTTClient("umqtt_client", server)
-    c.set_callback(sub_cb)
-    c.connect()
-    c.subscribe(b"foo_topic")
-    while True:
-        if True:
-            # Blocking wait for message
-            c.wait_msg()
-        else:
-            # Non-blocking wait for message
-            c.check_msg()
-            # Then need to sleep to avoid 100% CPU usage (in a real
-            # app other useful actions would be performed instead)
-            time.sleep(1)
-"""
 while True:
-  try:
-    #pub()
-    sub()
-    time.sleep(1)
-  except OSError:
-    pass
+  sub()
+  sleep(0.1)
+  pub()
+  sleep(2)
 
