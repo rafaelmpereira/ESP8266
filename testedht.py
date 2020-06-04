@@ -1,10 +1,6 @@
-
-
-
-
-import dht
 from machine import Pin
 from time import sleep
+import dht
 
 d = dht.DHT11(Pin(13))
 led = Pin(2, Pin.OUT)
