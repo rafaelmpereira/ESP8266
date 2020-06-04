@@ -19,9 +19,8 @@ def readDHT11():
   dt = d.temperature()
   print("Temperatura: "+ str(dt))
   return str(dt)
-  sleep(1)
 
-readDHT11()
+#readDHT11()
 
 
 
