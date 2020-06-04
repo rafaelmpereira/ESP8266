@@ -6,20 +6,25 @@ from testedht import readDHT11
 
 #                   Almir                                 Rafael                                    Stefano
 clientid = ["aa07e300-803f-11ea-883c-638d8ce4c23d", "bf401e30-a656-11ea-93bf-d33a96695544", "a2c20010-a657-11ea-883c-638d8ce4c23d"]
+# channels PUB
 channel = ["1","2","3"]
+# channels SUB
+channel = ["5","6","7"]
 
 #DEFINICOES
 server = "mqtt.mydevices.com"
 clientid = "bf401e30-a656-11ea-93bf-d33a96695544"
 username = "d6033960-7df0-11ea-a67f-15e30d90bbf4"
 password = "99e45f8e4ef9ef46f3bc0c42e4d0317e5bb523cb"
-led.value(1) # on ESP12E (not ESP32), the built in LED turns off with HIGH (and on with LOW)
-rele = machine.Pin(13)
+
+led = Pin(2, Pin.OUT) # on ESP12E (not ESP32), LED is in GPIO 2
+rele = Pin(15, Pin.OUT)
+led.value(1) # on ESP12E, LED is off with level HIGH
 rele.value(0)
 type = "temp"
 unit = "c"
-channel = 0
-channelSub = 5
+channel = 2
+channelSub = 6
 value = readDHT11()
 topicPub = ("v1/%s/things/%s/data/%s" % (username, clientid, channel))
 topicSub = ("v1/%s/things/%s/cmd/%s" % (username, clientid, channelSub))
