@@ -10,6 +10,20 @@ s1 = machine.PWM(p4,freq=50)
 # pin 5 -> servo 2
 s2 = machine.PWM(p5,freq=50)
 
+def deep_sleep(msecs):
+  # configure RTC.ALARM0 to be able to wake the device
+  rtc = machine.RTC()
+  rtc.irq(trigger=rtc.ALARM0, wake=machine.DEEPSLEEP)
+
+  # set RTC.ALARM0 to fire after X milliseconds (waking the device)
+  rtc.alarm(rtc.ALARM0, msecs)
+
+  # put the device to sleep
+  machine.deepsleep()
+
+
+
+
 
 while True:
   # duty for servo is between 40 - 115
