@@ -1,17 +1,10 @@
 import time
 import machine
 
-# PWM pins: 0, 2, 4, 5, 12, 13, 14 and 15
+s1 = machine.PWM(machine.Pin(4),freq=50)
+s2 = machine.PWM(machine.Pin(5),freq=50)
 
-# pin 4 -> servo 1
-p1 = machine.Pin(4)
-s1 = machine.PWM(p4,freq=50)
-
-# pin 5 -> servo 2
-s2 = machine.PWM(p5,freq=50)
-
-
-def deep_sleep(msecs):
+def deep_sleep(msecs):      # MUST connect RST to D4 (GPIO16 - WAKE)
   # configure RTC.ALARM0 to be able to wake the device
   rtc = machine.RTC()
   rtc.irq(trigger=rtc.ALARM0, wake=machine.DEEPSLEEP)
@@ -22,52 +15,36 @@ def deep_sleep(msecs):
   # put the device to sleep
   machine.deepsleep()
 
+# duty for servo is between 40 - 115
 def capture():
-  # duty for servo is between 40 - 115
-  s1.duty(100)
-  s2.duty(100)
-  time.sleep(1)
+  # Turning camera on
+  s1.duty(80)
+  time.sleep(0.5)
+  s1.duty(52)
+  time.sleep(0.5)
   s1.duty(60)
+  time.sleep(4)
+  s1.duty(52)
+  time.sleep(0.5)
+  s1.duty(80)
+  
+  # Capturing photo
   s2.duty(60)
-
+  time.sleep(0.5)
+  s2.duty(82)
+  time.sleep(0.5)
+  s2.duty(60)
+  time.sleep(3)
+  s2.duty(82)
+  time.sleep(0.5)
+  s2.duty(60)
+  time.sleep(5)
+  
+  # turning camera off
+  s1.duty(52)
+  time.sleep(5)
+  s1.duty(80)
 
 deep_sleep(1800000)  # milisecs
 capture()
 
-
-"""
-import time
-import machine
-p4 = machine.Pin(4)
-p5 = machine.Pin(5)
-s1 = machine.PWM(p4,freq=50)
-s2 = machine.PWM(p5,freq=50)
-# duty for servo is between 40 - 115
-
-s1.duty(80)
-time.sleep(0.5)
-s1.duty(52)
-time.sleep(0.5)
-s1.duty(60)
-time.sleep(4)
-s1.duty(52)
-time.sleep(0.5)
-s1.duty(80)
-
-time.sleep(3)
-
-s2.duty(60)
-time.sleep(0.5)
-s2.duty(82)
-time.sleep(0.5)
-s2.duty(60)
-time.sleep(3)
-s2.duty(82)
-time.sleep(0.5)
-s2.duty(60)
-
-time.sleep(3)
-s1.duty(52)
-time.sleep(5)
-s1.duty(80)
-"""
