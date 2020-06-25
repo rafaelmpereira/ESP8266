@@ -33,3 +33,41 @@ def capture():
 
 deep_sleep(1800000)  # milisecs
 capture()
+
+
+"""
+import time
+import machine
+p4 = machine.Pin(4)
+p5 = machine.Pin(5)
+s1 = machine.PWM(p4,freq=50)
+s2 = machine.PWM(p5,freq=50)
+# duty for servo is between 40 - 115
+
+s1.duty(80)
+time.sleep(0.5)
+s1.duty(52)
+time.sleep(0.5)
+s1.duty(60)
+time.sleep(4)
+s1.duty(52)
+time.sleep(0.5)
+s1.duty(80)
+
+time.sleep(3)
+
+s2.duty(60)
+time.sleep(0.5)
+s2.duty(82)
+time.sleep(0.5)
+s2.duty(60)
+time.sleep(3)
+s2.duty(82)
+time.sleep(0.5)
+s2.duty(60)
+
+time.sleep(3)
+s1.duty(52)
+time.sleep(5)
+s1.duty(80)
+"""
