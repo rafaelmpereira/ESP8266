@@ -40,11 +40,13 @@ def capture():
   s2.duty(60)
   time.sleep(5)
   
-  # turning camera off
+  # Turning camera off
   s1.duty(52)
   time.sleep(5)
   s1.duty(80)
 
-deep_sleep(1800000)  # milisecs
 capture()
-
+deep_sleep(1800000)  # milisecs
+# 30 s      ->     30 000 ms
+# 60 s      ->     60 000 ms
+# 30 min    ->  1 800 000 ms
